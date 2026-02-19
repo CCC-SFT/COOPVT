@@ -1,6 +1,6 @@
 let datos = [];
 
-fetch('data.csv')
+fetch('informacion_web.csv')
   .then(response => response.text())
   .then(text => {
     const filas = text.split('\n').map(f => f.split(','));
