@@ -5,7 +5,7 @@ fetch('informacion_web.csv')
   .then(response => response.text())
   .then(text => {
     const filas = text.trim().split('\n').map(f => f.split(','));
-    filas.shift();
+    filas.shift(); // quitar encabezados
     datos = filas;
   });
 
@@ -24,7 +24,8 @@ function buscar() {
     return;
   }
 
-  const encontrado = datos.find(fila => fila[0] === valor);
+  // 🔎 Buscar por NIT (columna 1)
+  const encontrado = datos.find(fila => fila[1] === valor);
 
   if (!encontrado) {
     resultado.innerHTML = `
@@ -69,15 +70,17 @@ function validarFecha() {
     return;
   }
 
-  // Validación de NULL
-  const fechaBD = (registroTemporal[1] || "").trim().toUpperCase();
+  // 🔴 Obtener fecha real de la BD (columna 2)
+  const fechaBD = (registroTemporal[2] || "").trim().toUpperCase();
 
+  // 🔴 Si es NULL en la base
   if (fechaBD === "" || fechaBD === "NULL") {
     errorDiv.innerHTML =
       "La fecha de expedición no se encuentra registrada en la base de datos. Por favor comuníquese con la administración.";
     return;
   }
 
+  // ✅ Comparar correctamente
   if (fechaNumerica === fechaBD) {
     bootstrap.Modal.getInstance(document.getElementById('fechaModal')).hide();
     mostrarTabla(registroTemporal);
@@ -118,14 +121,14 @@ function mostrarTabla(registro) {
         </thead>
         <tbody>
           <tr>
-            <td>${registro[0]}</td>
-            <td>${formatearFecha(registro[1])}</td>
-            <td>${registro[2]}</td>
+            <td>${registro[1]}</td>
+            <td>${formatearFecha(registro[2])}</td>
             <td>${registro[3]}</td>
             <td>${registro[4]}</td>
             <td>${registro[5]}</td>
-            <td>${registro[6] || 'No asignada'}</td>
-            <td>${registro[7]}</td>
+            <td>${registro[6]}</td>
+            <td>${registro[7] || 'No asignada'}</td>
+            <td>${registro[8]}</td>
           </tr>
         </tbody>
       </table>
