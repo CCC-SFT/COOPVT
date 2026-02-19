@@ -5,7 +5,7 @@ fetch('informacion_web.csv')
   .then(response => response.text())
   .then(text => {
     const filas = text.trim().split('\n').map(f => f.split(','));
-    filas.shift();
+    filas.shift(); // quitar encabezados
     datos = filas;
   });
 
@@ -37,6 +37,7 @@ function buscar() {
 
   registroTemporal = encontrado;
 
+  // 🔹 SIEMPRE abrir modal (aunque la fecha sea NULL)
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
   document.getElementById('fechaInput').value = "";
   document.getElementById('errorFecha').innerHTML = "";
@@ -69,17 +70,15 @@ function validarFecha() {
     return;
   }
 
-  // 🔴 VALIDACIÓN ROBUSTA DE NULL
-  const fechaBD = (registroTemporal[1] || "").trim().toUpperCase();
-
-  if (fechaBD === "" || fechaBD === "NULL") {
-    errorDiv.innerHTML =
+  // 🔴 CASO: Fecha NO registrada en base de datos
+  if (!registroTemporal[1] || registroTemporal[1].toLowerCase() === "null") {
+    errorDiv.innerHTML = 
       "La fecha de expedición no se encuentra registrada en la base de datos. Por favor comuníquese con la administración.";
     return;
   }
 
-  // ✅ Fecha correcta
-  if (fechaNumerica === fechaBD) {
+  // ✅ CASO: Fecha correcta
+  if (fechaNumerica === registroTemporal[1]) {
     bootstrap.Modal.getInstance(document.getElementById('fechaModal')).hide();
     mostrarTabla(registroTemporal);
   } else {
@@ -88,15 +87,13 @@ function validarFecha() {
 }
 
 function formatearFecha(fecha) {
-  const fechaBD = (fecha || "").trim().toUpperCase();
+  if (!fecha || fecha.toLowerCase() === "null") return "No registrada";
 
-  if (fechaBD === "" || fechaBD === "NULL") return "No registrada";
-
-  if (fechaBD.length === 8) {
-    return `${fechaBD.substring(0,4)}-${fechaBD.substring(4,6)}-${fechaBD.substring(6,8)}`;
+  if (fecha.length === 8) {
+    return `${fecha.substring(0,4)}-${fecha.substring(4,6)}-${fecha.substring(6,8)}`;
   }
 
-  return fechaBD;
+  return fecha;
 }
 
 function mostrarTabla(registro) {
