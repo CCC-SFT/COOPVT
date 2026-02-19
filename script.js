@@ -13,9 +13,7 @@ function buscar() {
     return;
   }
 
-  const encontrado = datos.find(fila => 
-    fila[0] && fila[0].trim() === valor
-  );
+  const encontrado = datos.find(fila => fila[0] === valor);
 
   if (!encontrado) {
     resultado.innerHTML = `
@@ -26,19 +24,11 @@ function buscar() {
     return;
   }
 
-  // 🔴 LISTA DE NIT SIN FECHA
-  const nitsSinFecha = [
-    "28815864",
-    "65808287",
-    "28789403",
-    "52439959",
-    "38259198"
-  ];
 
-  if (nitsSinFecha.includes(valor)) {
+  if (!encontrado[1] || encontrado[1].trim().toLowerCase() === "null") {
     resultado.innerHTML = `
-      <div class="alert alert-warning mt-3">
-        Este usuario no posee registro de fecha de expedición.
+      <div class="alert alert-info mt-3">
+        Su fecha de expedición no se encuentra registrada en la base de datos.
         <br>
         Por favor comuníquese con la administración para actualizar su información.
       </div>
@@ -46,7 +36,7 @@ function buscar() {
     return;
   }
 
-  // ✅ SI NO ESTÁ EN LA LISTA, ABRE MODAL
+
   registroTemporal = encontrado;
 
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
