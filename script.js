@@ -69,7 +69,7 @@ function validarFecha() {
     return;
   }
 
-  // Validación de NULL
+  // 🔴 VALIDACIÓN ROBUSTA DE NULL
   const fechaBD = (registroTemporal[1] || "").trim().toUpperCase();
 
   if (fechaBD === "" || fechaBD === "NULL") {
@@ -78,6 +78,7 @@ function validarFecha() {
     return;
   }
 
+  // ✅ Fecha correcta
   if (fechaNumerica === fechaBD) {
     bootstrap.Modal.getInstance(document.getElementById('fechaModal')).hide();
     mostrarTabla(registroTemporal);
