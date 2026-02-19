@@ -43,7 +43,6 @@ function buscar() {
     return;
   }
 
-  // Mostrar modal
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
   document.getElementById('fechaInput').value = "";
   document.getElementById('errorFecha').innerHTML = "";
@@ -51,12 +50,35 @@ function buscar() {
 }
 
 function validarFecha() {
-  const fechaIngresada = document.getElementById('fechaInput').value.trim();
+  let fechaIngresada = document.getElementById('fechaInput').value.trim();
   const errorDiv = document.getElementById('errorFecha');
 
   if (!registroTemporal) return;
 
-  if (fechaIngresada === registroTemporal[1]) {
+  // Convertir YYYY/MM/DD → YYYYMMDD
+  const fechaNumerica = fechaIngresada.replace(/\D/g, '');
+
+  if (fechaNumerica.length !== 8) {
+    errorDiv.innerHTML = "Formato inválido. Use YYYY/MM/DD.";
+    return;
+  }
+
+  // Validación básica de fecha
+  const year = fechaNumerica.substring(0, 4);
+  const month = parseInt(fechaNumerica.substring(4, 6));
+  const day = parseInt(fechaNumerica.substring(6, 8));
+
+  if (month < 1 || month > 12) {
+    errorDiv.innerHTML = "Mes inválido.";
+    return;
+  }
+
+  if (day < 1 || day > 31) {
+    errorDiv.innerHTML = "Día inválido.";
+    return;
+  }
+
+  if (fechaNumerica === registroTemporal[1]) {
     bootstrap.Modal.getInstance(document.getElementById('fechaModal')).hide();
     mostrarTabla(registroTemporal);
   } else {
@@ -108,3 +130,45 @@ function mostrarTabla(registro) {
     </div>
   `;
 }
+
+/* =========================
+   MÁSCARA AUTOMÁTICA FECHA
+========================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const fechaInput = document.getElementById('fechaInput');
+
+  if (fechaInput) {
+
+    fechaInput.addEventListener('input', function (e) {
+      let valor = e.target.value.replace(/\D/g, '');
+
+      if (valor.length > 8) {
+        valor = valor.substring(0, 8);
+      }
+
+      let formateado = '';
+
+      if (valor.length > 0) {
+        formateado = valor.substring(0, 4);
+      }
+      if (valor.length >= 5) {
+        formateado += '/' + valor.substring(4, 6);
+      }
+      if (valor.length >= 7) {
+        formateado += '/' + valor.substring(6, 8);
+      }
+
+      e.target.value = formateado;
+    });
+
+    // Permitir ENTER para validar
+    fechaInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        validarFecha();
+      }
+    });
+  }
+
+});
