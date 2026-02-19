@@ -29,7 +29,7 @@ function buscar() {
   if (!encontrado) {
     resultado.innerHTML = `
       <div class="alert alert-danger mt-3">
-        No se encontró información para ese NIT.
+        Actualmente el usuario de este NIT no se encuentra afiliado.
       </div>
     `;
     return;
