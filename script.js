@@ -5,7 +5,7 @@ fetch('informacion_web.csv')
   .then(response => response.text())
   .then(text => {
     const filas = text.trim().split('\n').map(f => f.split(','));
-    filas.shift(); // quitar encabezados
+    filas.shift(); // 
     datos = filas;
   });
 
