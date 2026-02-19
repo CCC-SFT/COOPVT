@@ -24,7 +24,7 @@ function buscar() {
     return;
   }
 
-  // Buscar solo en la columna 0 (NIT)
+  // Bwww
   const encontrado = datos.find(fila => fila[0] === valor);
 
   if (encontrado) {
