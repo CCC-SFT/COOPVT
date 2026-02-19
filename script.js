@@ -35,12 +35,12 @@ function buscar() {
             <tr>
               <th>NIT</th>
               <th>Fecha Expedición</th>
-              <th>Nombre</th>
-              <th>Ciudad Labora</th>
+              <th>Nombre del Asociado</th>
+              <th>Ciudad donde Labora</th>
               <th>Zona Electoral</th>
-              <th>Hábil</th>
+              <th>Estado</th>
               <th>Mesa</th>
-              <th>Lugar</th>
+              <th>Lugar de Votación</th>
             </tr>
           </thead>
           <tbody>
