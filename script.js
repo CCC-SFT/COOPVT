@@ -15,21 +15,54 @@ function buscar() {
   const valor = document.getElementById('busqueda').value.trim();
   const resultado = document.getElementById('resultado');
 
+  if (!valor) {
+    resultado.innerHTML = `
+      <div class="alert alert-warning mt-3">
+        Por favor ingrese un NIT.
+      </div>
+    `;
+    return;
+  }
+
   // Buscar solo en la columna 0 (NIT)
   const encontrado = datos.find(fila => fila[0] === valor);
 
   if (encontrado) {
     resultado.innerHTML = `
-      <b>NIT:</b> ${encontrado[0]} <br>
-      <b>Fecha Expedición:</b> ${encontrado[1]} <br>
-      <b>Nombre:</b> ${encontrado[2]} <br>
-      <b>Ciudad Labora:</b> ${encontrado[3]} <br>
-      <b>Zona Electoral:</b> ${encontrado[4]} <br>
-      <b>Hábil:</b> ${encontrado[5]} <br>
-      <b>Mesa:</b> ${encontrado[6] || 'No asignada'} <br>
-      <b>Lugar:</b> ${encontrado[7]}
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>NIT</th>
+              <th>Fecha Expedición</th>
+              <th>Nombre</th>
+              <th>Ciudad Labora</th>
+              <th>Zona Electoral</th>
+              <th>Hábil</th>
+              <th>Mesa</th>
+              <th>Lugar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${encontrado[0]}</td>
+              <td>${encontrado[1]}</td>
+              <td>${encontrado[2]}</td>
+              <td>${encontrado[3]}</td>
+              <td>${encontrado[4]}</td>
+              <td>${encontrado[5]}</td>
+              <td>${encontrado[6] || 'No asignada'}</td>
+              <td>${encontrado[7]}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     `;
   } else {
-    resultado.innerHTML = "No encontrado";
+    resultado.innerHTML = `
+      <div class="alert alert-danger mt-3">
+        No se encontró información para ese NIT.
+      </div>
+    `;
   }
 }
