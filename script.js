@@ -13,7 +13,10 @@ function buscar() {
     return;
   }
 
-  const encontrado = datos.find(fila => fila[0] === valor);
+  // 🔎 Buscar NIT limpiando espacios
+  const encontrado = datos.find(fila => 
+    fila[0] && fila[0].trim() === valor
+  );
 
   if (!encontrado) {
     resultado.innerHTML = `
@@ -24,8 +27,15 @@ function buscar() {
     return;
   }
 
-  // 🔴 SI LA FECHA ES NULL, MOSTRAR MENSAJE Y NO ABRIR MODAL
-  if (!encontrado[1] || encontrado[1].trim().toLowerCase() === "null") {
+  // 🔴 LIMPIEZA TOTAL DEL CAMPO FECHA
+  let fechaBD = encontrado[1] || "";
+  fechaBD = fechaBD.replace(/"/g, "")  // quitar comillas
+                   .replace(/\r/g, "") // quitar retorno de carro
+                   .trim()
+                   .toUpperCase();
+
+  // 🔴 SI ES NULL O VACÍO
+  if (fechaBD === "" || fechaBD === "NULL") {
     resultado.innerHTML = `
       <div class="alert alert-info mt-3">
         Su fecha de expedición no se encuentra registrada en la base de datos.
@@ -36,7 +46,7 @@ function buscar() {
     return;
   }
 
-  // ✅ SOLO SI TIENE FECHA, ABRIR MODAL
+  // ✅ SOLO SI TIENE FECHA REGISTRADA
   registroTemporal = encontrado;
 
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
