@@ -13,7 +13,6 @@ function buscar() {
     return;
   }
 
-  // 🔎 Buscar NIT limpiando espacios
   const encontrado = datos.find(fila => 
     fila[0] && fila[0].trim() === valor
   );
@@ -27,18 +26,19 @@ function buscar() {
     return;
   }
 
-  // 🔴 LIMPIEZA TOTAL DEL CAMPO FECHA
-  let fechaBD = encontrado[1] || "";
-  fechaBD = fechaBD.replace(/"/g, "")  // quitar comillas
-                   .replace(/\r/g, "") // quitar retorno de carro
-                   .trim()
-                   .toUpperCase();
+  // 🔴 LISTA DE NIT SIN FECHA
+  const nitsSinFecha = [
+    "28815864",
+    "65808287",
+    "28789403",
+    "52439959",
+    "38259198"
+  ];
 
-  // 🔴 SI ES NULL O VACÍO
-  if (fechaBD === "" || fechaBD === "NULL") {
+  if (nitsSinFecha.includes(valor)) {
     resultado.innerHTML = `
-      <div class="alert alert-info mt-3">
-        Su fecha de expedición no se encuentra registrada en la base de datos.
+      <div class="alert alert-warning mt-3">
+        Este usuario no posee registro de fecha de expedición.
         <br>
         Por favor comuníquese con la administración para actualizar su información.
       </div>
@@ -46,7 +46,7 @@ function buscar() {
     return;
   }
 
-  // ✅ SOLO SI TIENE FECHA REGISTRADA
+  // ✅ SI NO ESTÁ EN LA LISTA, ABRE MODAL
   registroTemporal = encontrado;
 
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
