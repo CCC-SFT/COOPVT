@@ -24,7 +24,7 @@ function buscar() {
     return;
   }
 
-
+  // 🔴 VALIDAR SI LA FECHA ES NULL ANTES DE ABRIR MODAL
   if (!encontrado[1] || encontrado[1].trim().toLowerCase() === "null") {
     resultado.innerHTML = `
       <div class="alert alert-info mt-3">
@@ -36,9 +36,9 @@ function buscar() {
     return;
   }
 
-
   registroTemporal = encontrado;
 
+  // ✅ Solo abre modal si sí tiene fecha registrada
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
   document.getElementById('fechaInput').value = "";
   document.getElementById('errorFecha').innerHTML = "";
