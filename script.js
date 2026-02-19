@@ -8,7 +8,7 @@ fetch('informacion_web.csv')
     filas.shift();
     datos = filas;
   });
-
+//ss
 function buscar() {
   const valor = document.getElementById('busqueda').value.trim();
   const resultado = document.getElementById('resultado');
