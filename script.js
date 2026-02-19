@@ -5,10 +5,10 @@ fetch('informacion_web.csv')
   .then(response => response.text())
   .then(text => {
     const filas = text.trim().split('\n').map(f => f.split(','));
-    filas.shift();
+    filas.shift(); // quitar encabezados
     datos = filas;
   });
-// s
+
 function buscar() {
   const valor = document.getElementById('busqueda').value.trim();
   const resultado = document.getElementById('resultado');
@@ -37,12 +37,7 @@ function buscar() {
 
   registroTemporal = encontrado;
 
-  // Si fecha es null o vacía
-  if (!encontrado[1] || encontrado[1].toLowerCase() === "null") {
-    mostrarTabla(encontrado);
-    return;
-  }
-
+  // 🔹 SIEMPRE abrir modal (aunque la fecha sea NULL)
   const modal = new bootstrap.Modal(document.getElementById('fechaModal'));
   document.getElementById('fechaInput').value = "";
   document.getElementById('errorFecha').innerHTML = "";
@@ -55,7 +50,6 @@ function validarFecha() {
 
   if (!registroTemporal) return;
 
-  // Convertir YYYY/MM/DD → YYYYMMDD
   const fechaNumerica = fechaIngresada.replace(/\D/g, '');
 
   if (fechaNumerica.length !== 8) {
@@ -63,8 +57,6 @@ function validarFecha() {
     return;
   }
 
-  // Validación básica de fecha
-  const year = fechaNumerica.substring(0, 4);
   const month = parseInt(fechaNumerica.substring(4, 6));
   const day = parseInt(fechaNumerica.substring(6, 8));
 
@@ -78,6 +70,14 @@ function validarFecha() {
     return;
   }
 
+  // 🔴 CASO: Fecha NO registrada en base de datos
+  if (!registroTemporal[1] || registroTemporal[1].toLowerCase() === "null") {
+    errorDiv.innerHTML = 
+      "La fecha de expedición no se encuentra registrada en la base de datos. Por favor comuníquese con la administración.";
+    return;
+  }
+
+  // ✅ CASO: Fecha correcta
   if (fechaNumerica === registroTemporal[1]) {
     bootstrap.Modal.getInstance(document.getElementById('fechaModal')).hide();
     mostrarTabla(registroTemporal);
@@ -87,7 +87,7 @@ function validarFecha() {
 }
 
 function formatearFecha(fecha) {
-  if (!fecha || fecha.toLowerCase() === "null") return "No suministrada";
+  if (!fecha || fecha.toLowerCase() === "null") return "No registrada";
 
   if (fecha.length === 8) {
     return `${fecha.substring(0,4)}-${fecha.substring(4,6)}-${fecha.substring(6,8)}`;
@@ -163,7 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
       e.target.value = formateado;
     });
 
-    // Permitir ENTER para validar
     fechaInput.addEventListener("keypress", function(e) {
       if (e.key === "Enter") {
         validarFecha();
